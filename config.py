@@ -68,9 +68,9 @@ STRING5 = getenv("STRING_SESSION5")
 
 # ── Media assets ───────────────────────────────────────────────────────────────
 START_VIDS = [
-    "http://telegraph.controller.bot/files/7859994210/BAACAgUAAxkBAAIQa2jiND4alwG5BwABRLe_CzUxOQgrggAC1hoAAtUqEFehw7nH9HAjLDYE",
-    "http://telegraph.controller.bot/files/7859994210/BAACAgUAAxkBAAIQa2jiND4alwG5BwABRLe_CzUxOQgrggAC1hoAAtUqEFehw7nH9HAjLDYE",
-    "http://telegraph.controller.bot/files/7859994210/BAACAgUAAxkBAAIQa2jiND4alwG5BwABRLe_CzUxOQgrggAC1hoAAtUqEFehw7nH9HAjLDYE",
+    "http://telegraph.controller.bot/files/7859994210/BAACAgUAAxkBAAIQhmjimRkPagGLIW7qcChH01V6KNhYAALXHAACGHUYV8KwWgxNYPkQNgQ",
+    "http://telegraph.controller.bot/files/7859994210/BAACAgUAAxkBAAIQhmjimRkPagGLIW7qcChH01V6KNhYAALXHAACGHUYV8KwWgxNYPkQNgQ",
+    "http://telegraph.controller.bot/files/7859994210/BAACAgUAAxkBAAIQhmjimRkPagGLIW7qcChH01V6KNhYAALXHAACGHUYV8KwWgxNYPkQNgQ",
 ]
 STICKERS = [
     "CAACAgUAAx0Cd6nKUAACASBl_rnalOle6g7qS-ry-aZ1ZpVEnwACgg8AAizLEFfI5wfykoCR4h4E",
