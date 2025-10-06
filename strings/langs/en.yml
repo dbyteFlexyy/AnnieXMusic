@@ -87,9 +87,9 @@ admin_42: "Nothing inside queue to shuffle"
 admin_43: "Failed to shuffle.\n\nCheck queue : /queue"
 admin_44: "**Queue Shuffled by {0}**\n\nCheck shuffled queue : /queue"
 admin_45: "Music is already muted."
-admin_46: "🎧 Voicechat Muted by {}!"
+admin_46: "🎧 Voicechat Muted by {0}!"
 admin_47: "Music is already unmuted."
-admin_48: "🎧 Voicechat Unmuted by {}!"
+admin_48: "🎧 Voicechat Unmuted by {0}!"
 
 start_1: "{0} ɪs ᴀʟɪᴠᴇ ʙᴀʙʏ.\n\n<b>✫ ᴜᴘᴛɪᴍᴇ :</b> {1}"
 
@@ -155,7 +155,7 @@ cplay_2: "» ᴛʜɪs ᴄʜᴀᴛ ᴅᴏɴ'ᴛ ʜᴀᴠᴇ ᴀɴʏ ʟɪɴᴋᴇ�
 cplay_3: "» ᴄʜᴀɴɴᴇʟ ᴅᴇғɪɴᴇᴅ ᴛᴏ {0}.\nᴄʜᴀɴɴᴇʟ ɪᴅ : <code>{1}</code>"
 cplay_4: "» ғᴀɪʟᴇᴅ ᴛᴏ ɢᴇᴛ ᴄʜᴀɴɴᴇʟ.\n\nᴍᴀᴋᴇ sᴜʀᴇ ʏᴏᴜ'ᴠᴇ ᴀᴅᴅᴇᴅ ᴛʜᴇ ʙᴏᴛ ɪɴ ʏᴏᴜʀ ᴄʜᴀɴɴᴇʟ ᴀɴᴅ ᴘʀᴏᴍᴏᴛᴇᴅ ᴀs ᴀᴅᴍɪɴ."
 cplay_5: "ᴏɴʟʏ ᴄʜᴀɴɴᴇʟs ᴀʀᴇ sᴜᴘᴘᴏʀᴛᴇᴅ."
-cplay_6: "» ʏᴏᴜ ɴᴇᴇᴅ ᴛᴏ ʙᴇ ᴛʜᴇ <b>ᴏᴡɴᴇʀ</b> ᴏғ ᴛʜᴇ ᴄʜᴀɴɴᴇʟ {0} ᴛᴏ ᴄᴏɴɴᴇᴄᴛ ɪᴛ ᴡɪᴛʜ ᴛʜɪs ɢʀᴏᴜᴘ.\n<b>ᴄʜᴀɴɴᴇʟ's ᴏᴡɴᴇʀ :</b> @{1}\n\nᴀʟᴛᴇʀɴᴀᴛɪᴠᴇʟʏ ʏᴏᴜ ᴄᴀɴ ʟɪɴᴋ ʏᴏᴜʀ ɢʀᴏᴜᴘ ᴛᴏ ᴛʜᴀᴛ ᴄʜᴀɴɴᴇʟ ᴀɴᴅ ᴛʜᴇɴ ᴛʀʏ ᴄᴏɴɴɴᴇᴄᴛɪɴɢ ᴡɪᴛʜ <code>/channelplay linked</code>"
+cplay_6: "» ʏᴏᴜ ɴᴇᴇᴅ ᴛᴏ ᴇ ʙᴇ ᴛʜᴇ <b>ᴏᴡɴᴇʀ</b> ᴏғ ᴛʜᴇ ᴄʜᴀɴɴᴇʟ {0} ᴛᴏ ᴄᴏɴɴᴇᴄᴛ ɪᴛ ᴡɪᴛʜ ᴛʜɪs ɢʀᴏᴜᴘ.\n<b>ᴄʜᴀɴɴᴇʟ's ᴏᴡɴᴇʀ :</b> @{1}\n\nᴀʟᴛᴇʀɴᴀᴛɪᴠᴇʟʏ ʏᴏᴜ ᴄᴀɴ ʟɪɴᴋ ʏᴏᴜʀ ɢʀᴏᴜᴘ ᴛᴏ ᴛʜᴀᴛ ᴄʜᴀɴɴᴇʟ ᴀɴᴅ ᴛʜᴇɴ ᴛʀʏ ᴄᴏɴɴɴᴇᴄᴛɪɴɢ ᴡɪᴛʜ <code>/channelplay linked</code>"
 cplay_7: "» ᴄʜᴀɴɴᴇʟ ᴘʟᴀʏ ᴅɪsᴀʙʟᴇᴅ."
 
 play_1: "🦋"
