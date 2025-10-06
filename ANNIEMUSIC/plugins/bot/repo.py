@@ -3,22 +3,22 @@ from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from ANNIEMUSIC import app
 from config import BOT_USERNAME
 
-repo_caption = """
-<b>🎵 ᴧᴜʀᴏʀᴧ x ᴍᴜsɪᴄ ʀᴇᴘᴏsɪᴛᴏʀʏ 🎵</b>
+repo_caption = """**
+🎵 **ᴧᴜʀᴏʀᴧ x ᴍᴜsɪᴄ ʀᴇᴘᴏsɪᴛᴏʀʏ** 🎵
 
-<b>✦ ᴏғғɪᴄɪᴀʟ ɢɪᴛʜᴜʙ ʀᴇᴘᴏ ✦</b>
-➤ <b>ғᴜʟʟʏ sᴛᴀʙʟᴇ & ᴜᴘᴅᴀᴛᴇᴅ ᴄᴏᴅᴇ</b>
-➤ <b>ɴᴏ ʜᴇʀᴏᴋᴜ ʙᴀɴ ɪssᴜᴇs</b>
-➤ <b>ɴᴏ ɪᴅ ʙᴀɴ ᴘʀᴏʙʟᴇᴍs</b>
-➤ <b>ᴜɴʟɪᴍɪᴛᴇᴅ ᴅʏɴᴏ ʜᴏᴜʀs</b>
-➤ <b>24/7 ʟᴀɢ-ғʀᴇᴇ ᴘᴇʀғᴏʀᴍᴀɴᴄᴇ</b>
+✦ **ᴏғғɪᴄɪᴀʟ ɢɪᴛʜᴜʙ ʀᴇᴘᴏ** ✦
+➤ **ғᴜʟʟʏ sᴛᴀʙʟᴇ & ᴜᴘᴅᴀᴛᴇᴅ ᴄᴏᴅᴇ**
+➤ **ɴᴏ ʜᴇʀᴏᴋᴜ ʙᴀɴ ɪssᴜᴇs**
+➤ **ɴᴏ ɪᴅ ʙᴀɴ ᴘʀᴏʙʟᴇᴍs**
+➤ **ᴜɴʟɪᴍɪᴛᴇᴅ ᴅʏɴᴏ ʜᴏᴜʀs**
+➤ **24/7 ʟᴀɢ-ғʀᴇᴇ ᴘᴇʀғᴏʀᴍᴀɴᴄᴇ**
 
-<b>📢 ɴᴏᴛᴇ:</b>
-➤ <b>ᴛʜɪs ʀᴇᴘᴏ ɪs ᴘʀɪᴠᴀᴛᴇʟʏ ᴍᴀɴᴀɢᴇᴅ</b>
-➤ <b>ғᴏʀ ʀᴇᴘᴏ ᴀᴄᴄᴇss, ᴄᴏɴᴛᴀᴄᴛ ᴏᴡɴᴇʀ</b>
+📢 **ɴᴏᴛᴇ:** 
+➤ **ᴛʜɪs ʀᴇᴘᴏ ɪs ᴘʀɪᴠᴀᴛᴇʟʏ ᴍᴀɴᴀɢᴇᴅ**
+➤ **ғᴏʀ ʀᴇᴘᴏ ᴀᴄᴄᴇss, ᴄᴏɴᴛᴀᴄᴛ ᴏᴡɴᴇʀ**
 
-© <b>ᴅʀᴀɢᴏɴʙʏᴛᴇ 2025 - ᴀʟʟ ʀɪɢʜᴛs ʀᴇsᴇʀᴠᴇᴅ</b>
-"""
+© **ᴅʀᴀɢᴏɴʙʏᴛᴇ 2025 - ᴀʟʟ ʀɪɢʜᴛs ʀᴇsᴇʀᴠᴇᴅ**
+**"""
 
 @app.on_message(filters.command("repo"))
 async def show_repo(_, msg):
@@ -36,12 +36,11 @@ async def show_repo(_, msg):
 
     reply_markup = InlineKeyboardMarkup(buttons)
 
-    try:
+    try:  
         await msg.reply_photo(
             photo="https://files.catbox.moe/nnjeeo.jpg",
             caption=repo_caption,
-            reply_markup=reply_markup,
-            parse_mode="html"
+            reply_markup=reply_markup
         )
     except Exception as e:
         print(f"Error sending repo: {e}")
