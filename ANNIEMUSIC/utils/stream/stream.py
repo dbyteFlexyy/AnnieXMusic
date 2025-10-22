@@ -83,10 +83,12 @@ async def stream(
                     file_path, direct = await YouTube.download(
                         vidid, mystic, video=is_video, videoid=vidid
                     )
-                except Exception:
-                    raise AssistantErr(_["play_14"])
+                except Exception as e:
+                    await mystic.edit_text(f"Download failed: {str(e)}")
+                    continue
                 if not file_path:
-                    raise AssistantErr(_["play_14"])
+                    await mystic.edit_text(_["play_14"])
+                    continue
 
                 await JARVIS.join_call(
                     chat_id,
@@ -155,10 +157,12 @@ async def stream(
             file_path, direct = await YouTube.download(
                 vidid, mystic, video=is_video, videoid=vidid
             )
-        except Exception:
-            raise AssistantErr(_["play_14"])
+        except Exception as e:
+            await mystic.edit_text(f"Download failed: {str(e)}")
+            return
         if not file_path:
-            raise AssistantErr(_["play_14"])
+            await mystic.edit_text(_["play_14"])
+            return
 
         if await is_active_chat(chat_id):
             await put_queue(
@@ -222,7 +226,8 @@ async def stream(
         title = result["title"]
         duration_min = result["duration_min"]
         if not file_path:
-            raise AssistantErr(_["play_14"])
+            await mystic.edit_text(_["play_14"])
+            return
 
         if await is_active_chat(chat_id):
             await put_queue(
@@ -277,7 +282,8 @@ async def stream(
         title = (result["title"]).title()
         duration_min = result["dur"]
         if not file_path:
-            raise AssistantErr(_["play_14"])
+            await mystic.edit_text(_["play_14"])
+            return
 
         if await is_active_chat(chat_id):
             await put_queue(
@@ -357,9 +363,11 @@ async def stream(
                 db[chat_id] = []
             n, file_path = await YouTube.video(link)
             if n == 0:
-                raise AssistantErr(_["str_3"])
+                await mystic.edit_text(_["str_3"])
+                return
             if not file_path:
-                raise AssistantErr(_["play_14"])
+                await mystic.edit_text(_["play_14"])
+                return
 
             await JARVIS.join_call(
                 chat_id,
