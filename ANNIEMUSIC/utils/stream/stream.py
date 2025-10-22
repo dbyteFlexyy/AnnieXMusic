@@ -1,8 +1,10 @@
 import os
+import asyncio
 from random import randint
 from typing import Union
 
 from pyrogram.types import InlineKeyboardMarkup
+import yt_dlp
 
 import config
 from ANNIEMUSIC import Carbon, YouTube, app
@@ -15,6 +17,49 @@ from ANNIEMUSIC.utils.pastebin import ANNIEBIN
 from ANNIEMUSIC.utils.stream.queue import put_queue, put_queue_index
 from ANNIEMUSIC.utils.thumbnails import get_thumb
 from ANNIEMUSIC.utils.errors import capture_internal_err
+
+
+async def download_with_retry(vidid, mystic, video=False, max_retries=3):
+    """Download with retry mechanism"""
+    for attempt in range(max_retries):
+        try:
+            ydl_opts = {
+                'format': 'bestvideo[height<=720]+bestaudio/best[height<=720]' if video else 'bestaudio/best',
+                'outtmpl': 'downloads/%(id)s.%(ext)s',
+                'geo_bypass': True,
+                'nocheckcertificate': True,
+                'quiet': True,
+                'no_warnings': True,
+                'extractaudio': not video,
+                'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'cookiefile': 'cookies.txt' if os.path.exists('cookies.txt') else None,
+            }
+            
+            # Try different formats if download fails
+            if attempt == 1:
+                ydl_opts['format'] = 'worst[height<=480]+worstaudio/worst[height<=480]' if video else 'worstaudio/worst'
+            elif attempt == 2:
+                ydl_opts['format'] = 'best/best' if video else 'bestaudio/best'
+                ydl_opts['user-agent'] = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36'
+            
+            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                info = ydl.extract_info(f"https://www.youtube.com/watch?v={vidid}", download=True)
+                file_path = ydl.prepare_filename(info)
+                
+                # Check if file exists and has content
+                if os.path.exists(file_path) and os.path.getsize(file_path) > 0:
+                    return file_path, True
+                else:
+                    continue
+                    
+        except Exception as e:
+            print(f"Download attempt {attempt + 1} failed: {str(e)}")
+            if attempt < max_retries - 1:
+                await mystic.edit_text(f"🔄 Retry {attempt + 1}/{max_retries}...")
+                await asyncio.sleep(2)
+            continue
+    
+    return None, False
 
 
 @capture_internal_err
@@ -44,6 +89,7 @@ async def stream(
         msg = f"{_['play_19']}\n\n"
         count = 0
         position = 0
+        successful_tracks = 0
 
         for search in result:
             if int(count) == config.PLAYLIST_FETCH_LIMIT:
@@ -74,19 +120,19 @@ async def stream(
                 )
                 position = len(db.get(chat_id)) - 1
                 count += 1
+                successful_tracks += 1
                 msg += f"{count}. {title[:70]}\n"
                 msg += f"{_['play_20']} {position}\n\n"
             else:
                 if not forceplay:
                     db[chat_id] = []
-                try:
-                    file_path, direct = await YouTube.download(
-                        vidid, mystic, video=is_video, videoid=vidid
-                    )
-                except Exception:
-                    raise AssistantErr(_["play_14"])
+                
+                file_path, direct = await download_with_retry(
+                    vidid, mystic, video=is_video
+                )
+                
                 if not file_path:
-                    raise AssistantErr(_["play_14"])
+                    continue
 
                 await JARVIS.join_call(
                     chat_id,
@@ -122,27 +168,31 @@ async def stream(
                 )
                 db[chat_id][0]["mystic"] = run
                 db[chat_id][0]["markup"] = "stream"
+                successful_tracks += 1
 
-        if count == 0:
+        if successful_tracks == 0:
+            await mystic.edit_text(_["play_14"])
             return
-        link = await ANNIEBIN(msg)
-        lines = msg.count("\n")
-        car = os.linesep.join(msg.split(os.linesep)[:17]) if lines >= 17 else msg
-        try:
-            carbon = await Carbon.generate(car, randint(100, 10000000))
-            playlist_photo = carbon
-        except Exception:
-            playlist_photo = config.PLAYLIST_IMG_URL
-        upl = close_markup(_)
-        final_position = len(db.get(chat_id) or []) - 1
-        if final_position < 0:
-            final_position = 0
-        return await app.send_photo(
-            original_chat_id,
-            photo=playlist_photo,
-            caption=_["play_21"].format(final_position, link),
-            reply_markup=upl,
-        )
+            
+        if count > 0:
+            link = await ANNIEBIN(msg)
+            lines = msg.count("\n")
+            car = os.linesep.join(msg.split(os.linesep)[:17]) if lines >= 17 else msg
+            try:
+                carbon = await Carbon.generate(car, randint(100, 10000000))
+                playlist_photo = carbon
+            except Exception:
+                playlist_photo = config.PLAYLIST_IMG_URL
+            upl = close_markup(_)
+            final_position = len(db.get(chat_id) or []) - 1
+            if final_position < 0:
+                final_position = 0
+            return await app.send_photo(
+                original_chat_id,
+                photo=playlist_photo,
+                caption=_["play_21"].format(final_position, link),
+                reply_markup=upl,
+            )
 
     elif streamtype == "youtube":
         link = result["link"]
@@ -151,12 +201,10 @@ async def stream(
         duration_min = result["duration_min"]
         thumbnail = result["thumb"]
 
-        try:
-            file_path, direct = await YouTube.download(
-                vidid, mystic, video=is_video, videoid=vidid
-            )
-        except Exception:
-            raise AssistantErr(_["play_14"])
+        file_path, direct = await download_with_retry(
+            vidid, mystic, video=is_video
+        )
+        
         if not file_path:
             raise AssistantErr(_["play_14"])
 
@@ -355,46 +403,59 @@ async def stream(
         else:
             if not forceplay:
                 db[chat_id] = []
-            n, file_path = await YouTube.video(link)
-            if n == 0:
-                raise AssistantErr(_["str_3"])
-            if not file_path:
-                raise AssistantErr(_["play_14"])
-
-            await JARVIS.join_call(
-                chat_id,
-                original_chat_id,
-                file_path,
-                video=is_video,
-                image=thumbnail or None,
-            )
-            await put_queue(
-                chat_id,
-                original_chat_id,
-                f"live_{vidid}",
-                title,
-                duration_min,
-                user_name,
-                vidid,
-                user_id,
-                "video" if is_video else "audio",
-                forceplay=forceplay,
-            )
-            img = await get_thumb(vidid)
-            button = stream_markup(_, chat_id)
-            run = await app.send_photo(
-                original_chat_id,
-                photo=img,
-                caption=_["stream_1"].format(
-                    f"https://t.me/{app.username}?start=info_{vidid}",
-                    title[:23],
+            
+            # For live streams, use direct URL approach
+            ydl_opts = {
+                'format': 'best[height<=720]' if is_video else 'bestaudio/best',
+                'geo_bypass': True,
+                'nocheckcertificate': True,
+                'quiet': True,
+                'no_warnings': True,
+                'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            }
+            
+            try:
+                with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                    info = ydl.extract_info(link, download=False)
+                    stream_url = info['url']
+                    
+                await JARVIS.join_call(
+                    chat_id,
+                    original_chat_id,
+                    stream_url,
+                    video=is_video,
+                    image=thumbnail or None,
+                )
+                await put_queue(
+                    chat_id,
+                    original_chat_id,
+                    f"live_{vidid}",
+                    title,
                     duration_min,
                     user_name,
-                ),
-                reply_markup=InlineKeyboardMarkup(button),
-            )
-            db[chat_id][0]["mystic"] = run
-            db[chat_id][0]["markup"] = "tg"
+                    vidid,
+                    user_id,
+                    "video" if is_video else "audio",
+                    forceplay=forceplay,
+                )
+                img = await get_thumb(vidid)
+                button = stream_markup(_, chat_id)
+                run = await app.send_photo(
+                    original_chat_id,
+                    photo=img,
+                    caption=_["stream_1"].format(
+                        f"https://t.me/{app.username}?start=info_{vidid}",
+                        title[:23],
+                        duration_min,
+                        user_name,
+                    ),
+                    reply_markup=InlineKeyboardMarkup(button),
+                )
+                db[chat_id][0]["mystic"] = run
+                db[chat_id][0]["markup"] = "tg"
+            except Exception as e:
+                print(f"Live stream error: {str(e)}")
+                raise AssistantErr(_["str_3"])
 
     elif streamtype == "index":
         link = result
